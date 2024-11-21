@@ -255,12 +255,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c8ec6f7dd59a674fa3cb7cb502b03c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapSize: {x: 16, y: 10}
+  mapSize: {x: 64, y: 40}
   minimumDevideRate: 0.4
   maximumDivideRate: 0.6
   line: {fileID: 4085996460363633732, guid: a7e04e79930a45545a3e9128ef6f2708, type: 3}
   map: {fileID: 6381240835016493155, guid: b3db8c48ad37d8e4d822a518d5b97732, type: 3}
-  roomLine: {fileID: 4085996460363633732, guid: a7e04e79930a45545a3e9128ef6f2708,
+  roomLine: {fileID: 6381240835016493155, guid: b3db8c48ad37d8e4d822a518d5b97732,
     type: 3}
   maximumDepth: 4
 --- !u!1660057539 &9223372036854775807

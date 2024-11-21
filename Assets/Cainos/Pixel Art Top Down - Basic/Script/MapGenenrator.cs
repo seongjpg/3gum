@@ -17,10 +17,8 @@ public class MapGenerator : MonoBehaviour
 		Node root = new Node(new RectInt(0, 0, mapSize.x, mapSize.y)); //전체 맵 크기의 루트노드를 만듬
 		DrawMap(0, 0);
 		Divide(root, 0);
+		GenerateRoom(root, 0);
 	}
-
-
-
 	private void DrawMap(int x, int y) //x y는 화면의 중앙위치를 뜻함
 	{
 		//기본적으로 mapSize/2라는 값을 계속해서 빼게 될건데, 화면의 중앙에서 화면의 크기의 반을 빼줘야 좌측 하단좌표를 구할 수 있기 때문이다.
@@ -70,4 +68,39 @@ public class MapGenerator : MonoBehaviour
 		lineRenderer.SetPosition(0, from - mapSize / 2);
 		lineRenderer.SetPosition(1, to - mapSize / 2);
 	}
+	private RectInt GenerateRoom(Node tree, int n)
+	{
+		RectInt rect;
+		if (n == maximumDepth) //해당 노드가 리프노드라면 방을 만들어 줄 것이다.
+		{
+			rect = tree.nodeRect;
+			int width = Random.Range(rect.width / 2, rect.width - 1);
+			//방의 가로 최소 크기는 노드의 가로길이의 절반, 최대 크기는 가로길이보다 1 작게 설정한 후 그 사이 값중 랜덤한 값을 구해준다.
+			int height = Random.Range(rect.height / 2, rect.height - 1);
+			//높이도 위와 같다.
+			int x = rect.x + Random.Range(1, rect.width - width);
+			//방의 x좌표이다. 만약 0이 된다면 붙어 있는 방과 합쳐지기 때문에,최솟값은 1로 해주고, 최댓값은 기존 노드의 가로에서 방의 가로길이를 빼 준 값이다.
+			int y = rect.y + Random.Range(1, rect.height - height);
+			//y좌표도 위와 같다.
+			rect = new RectInt(x, y, width, height);
+			DrawRectangle(rect);
+		}
+		else //  맨 끝의 리프노드가 아닌 경우, 재귀적으루 좌 우 리프노드에 대해  generateroom을 실행
+		{
+			tree.leftNode.roomRect = GenerateRoom(tree.leftNode, n + 1);
+			tree.rightNode.roomRect = GenerateRoom(tree.rightNode, n + 1);
+			rect = tree.leftNode.roomRect;
+		}
+		return rect;
+	}
+
+	private void DrawRectangle(RectInt rect)
+	{
+		LineRenderer lineRenderer = Instantiate(roomLine).GetComponent<LineRenderer>();
+		lineRenderer.SetPosition(0, new Vector2(rect.x, rect.y) - mapSize / 2); //좌측 하단
+		lineRenderer.SetPosition(1, new Vector2(rect.x + rect.width, rect.y) - mapSize / 2); //우측 하단
+		lineRenderer.SetPosition(2, new Vector2(rect.x + rect.width, rect.y + rect.height) - mapSize / 2);//우측 상단
+		lineRenderer.SetPosition(3, new Vector2(rect.x, rect.y + rect.height) - mapSize / 2); //좌측 상단
+	}
+
 }
