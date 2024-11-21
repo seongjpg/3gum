@@ -18,7 +18,7 @@ public class MapGenerator : MonoBehaviour
 		DrawMap(0, 0);
 		Divide(root, 0);
 		GenerateRoom(root, 0);
-		GenerateLoad(root, 0);
+		GenerateRoad(root, 0);
 	}
 	private void DrawMap(int x, int y) //x y는 화면의 중앙위치를 뜻함
 	{
@@ -103,7 +103,7 @@ public class MapGenerator : MonoBehaviour
 		lineRenderer.SetPosition(2, new Vector2(rect.x + rect.width, rect.y + rect.height) - mapSize / 2);//우측 상단
 		lineRenderer.SetPosition(3, new Vector2(rect.x, rect.y + rect.height) - mapSize / 2); //좌측 상단
 	}
-	private void GenerateLoad(Node tree, int n)
+	private void GenerateRoad(Node tree, int n)
 	{
 		if (n == maximumDepth) //리프 노드라면 이을 자식이 없다.
 			return;
@@ -114,7 +114,7 @@ public class MapGenerator : MonoBehaviour
 		//세로 기준을 leftnode에 맞춰서 가로 선으로 연결해줌.
 		DrawLine(new Vector2(rightNodeCenter.x, leftNodeCenter.y), new Vector2(rightNodeCenter.x, rightNodeCenter.y));
 		//가로 기준을 rightnode에 맞춰서 세로 선으로 연결해줌.
-		GenerateLoad(tree.leftNode, n + 1); //자식 노드들도 탐색
-		GenerateLoad(tree.rightNode, n + 1);
+		GenerateRoad(tree.leftNode, n + 1); //자식 노드들도 탐색
+		GenerateRoad(tree.rightNode, n + 1);
 	}
 }
