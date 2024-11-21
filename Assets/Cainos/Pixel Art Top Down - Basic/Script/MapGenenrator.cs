@@ -18,6 +18,7 @@ public class MapGenerator : MonoBehaviour
 		DrawMap(0, 0);
 		Divide(root, 0);
 		GenerateRoom(root, 0);
+		GenerateLoad(root, 0);
 	}
 	private void DrawMap(int x, int y) //x y는 화면의 중앙위치를 뜻함
 	{
@@ -54,7 +55,7 @@ public class MapGenerator : MonoBehaviour
 		{
 			tree.leftNode = new Node(new RectInt(tree.nodeRect.x, tree.nodeRect.y, tree.nodeRect.width, split));
 			tree.rightNode = new Node(new RectInt(tree.nodeRect.x, tree.nodeRect.y + split, tree.nodeRect.width, tree.nodeRect.height - split));
-			DrawLine(new Vector2(tree.nodeRect.x, tree.nodeRect.y + split), new Vector2(tree.nodeRect.x + tree.nodeRect.width, tree.nodeRect.y + split));
+			DrawLine(new Vector2(tree.nodeRect.x , tree.nodeRect.y+ split), new Vector2(tree.nodeRect.x + tree.nodeRect.width, tree.nodeRect.y  + split));
 			//세로가 더 길었던 경우이다. 자세한 사항은 가로와 같다.
 		}
 		tree.leftNode.parNode = tree; //자식노드들의 부모노드를 나누기전 노드로 설정
@@ -85,7 +86,7 @@ public class MapGenerator : MonoBehaviour
 			rect = new RectInt(x, y, width, height);
 			DrawRectangle(rect);
 		}
-		else //  맨 끝의 리프노드가 아닌 경우, 재귀적으루 좌 우 리프노드에 대해  generateroom을 실행
+		else
 		{
 			tree.leftNode.roomRect = GenerateRoom(tree.leftNode, n + 1);
 			tree.rightNode.roomRect = GenerateRoom(tree.rightNode, n + 1);
@@ -102,5 +103,18 @@ public class MapGenerator : MonoBehaviour
 		lineRenderer.SetPosition(2, new Vector2(rect.x + rect.width, rect.y + rect.height) - mapSize / 2);//우측 상단
 		lineRenderer.SetPosition(3, new Vector2(rect.x, rect.y + rect.height) - mapSize / 2); //좌측 상단
 	}
+	private void GenerateLoad(Node tree, int n)
+	{
+		if (n == maximumDepth) //리프 노드라면 이을 자식이 없다.
+			return;
+		Vector2Int leftNodeCenter = tree.leftNode.center;
+		Vector2Int rightNodeCenter = tree.rightNode.center;
 
+		DrawLine(new Vector2(leftNodeCenter.x, leftNodeCenter.y), new Vector2(rightNodeCenter.x, leftNodeCenter.y));
+		//세로 기준을 leftnode에 맞춰서 가로 선으로 연결해줌.
+		DrawLine(new Vector2(rightNodeCenter.x, leftNodeCenter.y), new Vector2(rightNodeCenter.x, rightNodeCenter.y));
+		//가로 기준을 rightnode에 맞춰서 세로 선으로 연결해줌.
+		GenerateLoad(tree.leftNode, n + 1); //자식 노드들도 탐색
+		GenerateLoad(tree.rightNode, n + 1);
+	}
 }
